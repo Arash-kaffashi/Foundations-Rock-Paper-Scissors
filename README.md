@@ -29,3 +29,16 @@
     1. Use `prompt()` to get input from the user. [Read the docs here if you need to.](https://developer.mozilla.org/en-US/docs/Web/API/Window/prompt)
     1. Feel free to re-work your previous functions if you need to. Specifically, you might want to change the return value to something more useful.
     1. Feel free to create more “helper” functions if you think it would be useful.
+
+# RPS-UI
+
+## Assignment
+
+
+1. For now, remove the logic that plays exactly five rounds.
+1. Create three buttons, one for each selection. Add an event listener to the buttons that calls your `playRound` function with the correct `playerSelection` every time a button is clicked. (you can keep the `console.log`s for this step)
+1. Add a `div` for displaying results and change all of your `console.log`s into DOM methods.
+1. Display the running score, and announce a winner of the game once one player reaches 5 points.
+1. You will likely have to refactor (rework/rewrite) your original code to make it work for this. That’s OK! Reworking old code is an important part of a programmer’s life.
+1. Once you’re all done with your UI and make sure everything’s satisfactory, it’s time to merge our current branch `rps-ui` to our main branch.
+

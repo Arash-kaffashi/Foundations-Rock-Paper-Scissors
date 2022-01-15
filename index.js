@@ -1,4 +1,4 @@
-const ALLOWED_PLAY = ["rock", "paper", "scissors"];
+const ALLOWED_PLAY = ["Rock", "Paper", "Scissors"];
 
 /**
  * @link Source https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -17,32 +17,6 @@ function getRandomIntInclusive(min, max) {
  */
 function computerPlay() {
     return ALLOWED_PLAY[getRandomIntInclusive(0, 2)];
-}
-
-/**
- * 
- * @param {String} promptString 
- * @param {[String]} options 
- * @param {Boolean} caseSentive 
- * @returns answer within the options
- */
-function getValidAnswer(promptString, options, caseSentive = false) {
-    let valid = false;
-    let answer;
-
-    if (!caseSentive) {
-        options = options.map(option => option.toLowerCase());
-    } 
-
-    do {
-        answer = prompt(promptString);
-        
-        if (!caseSentive) answer = answer.toLowerCase();
-        if (options.includes(answer)) valid = true;
-        else alert("Your answer was invalid, try again!");
-    } while (!valid);
-
-    return answer;
 }
 
 /** 
@@ -71,53 +45,76 @@ class Score {
     addComputer() {
         this.computer++;
     }
-    winner() {
-        return this.player >= 3 ? "player" :
-            this.computer >= 3 ? "computer" :
+    get winner() {
+        return this.player >= 5 ? "player" :
+            this.computer >= 5 ? "computer" :
                 null;
     }
 }
 
 /**
- * Runs the game 5 times
+ * 
+ * @param {String} message Message to display
+ * @param {Boolean} user Indicates if the message is a log or a command typed
+ * @returns {undefined}
  */
-function game() {
-    let run = true;
-    let currentScore = new Score();
-
-    console.clear();
-    do {
-        let round = 0;
-        currentScore.reset();
-        console.log("New Game (Best of 5)");
-
-        do {
-            let playerchoice = getValidAnswer("What will you throw? (rock, paper, scissors)", ALLOWED_PLAY);
-            let computerchoice = computerPlay();
-
-            switch( playRound(playerchoice, computerchoice) ) {
-                case 0:
-                    console.log(`${round}. Draw!`);
-                    break;
-                case 2:
-                case 3:
-                case 7:
-                    currentScore.addPlayer();
-                    console.log(`${round}. You Win! ${playerchoice} beats ${computerchoice}`);
-                    break;
-                case 1:
-                case 5:
-                case 6:
-                    currentScore.addComputer();
-                    console.log(`${round}. You Lose! ${computerchoice} beats ${playerchoice}`);
-                    break;
-            }
-            round++;
-        } while (!currentScore.winner());
-        console.log(`${currentScore.winner()} win!`);
-        console.log('---');
-        run = getValidAnswer("Do you want to play again? (y, n)", ['y', 'n']) === 'y' ? true : false;
-    } while (run === true)
+function logtoBoard(message, user = false) {
+    let p = document.createElement("p");
+    p.appendChild(document.createTextNode(message));
+    p.classList.add(user ? "command" : "log");
+    logboard.appendChild(p);
 }
 
-game();
+class State {
+    constructor() {
+        this.round = 0;
+        this.score = new Score();
+    }
+}
+
+let state = new State();
+const logboard = document.querySelector(".log-board");
+const playerScore = document.getElementById("playerScore");
+const computerScore = document.getElementById("computerScore");
+const updateBoard = function(score) {
+    playerScore.textContent = score.player;
+    computerScore.textContent = score.computer;
+}
+const controls = document.querySelectorAll('.controls input');
+
+const handlePlayer = function(e) {
+    e.stopPropagation();
+    
+    let playerchoice = this.value;
+    let computerchoice = computerPlay();
+
+    logtoBoard(`You played ${playerchoice}`, true);
+
+    switch( playRound(playerchoice, computerchoice) ) {
+        case 0:
+            logtoBoard(`It was a draw!`);
+            break;
+        case 2:
+        case 3:
+        case 7:
+            state.score.addPlayer();
+            logtoBoard(`You Win! ${playerchoice} beats ${computerchoice}`);
+            break;
+        case 1:
+        case 5:
+        case 6:
+            state.score.addComputer();
+            logtoBoard(`You Lose! ${computerchoice} beats ${playerchoice}`);
+            break;
+    }
+    updateBoard(state.score);
+    state.round++;
+    
+    if (state.score.winner) {
+        logtoBoard(`${state.score.winner} won!`);
+        logtoBoard('---');
+        controls.forEach(button => button.disabled = true);
+    }
+}
+
+controls.forEach(button => button.addEventListener('click', handlePlayer));

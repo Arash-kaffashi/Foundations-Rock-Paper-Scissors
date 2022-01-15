@@ -1,0 +1,62 @@
+.title {
+    text-align: center;
+}
+.log-board {
+    border: 1px solid black;
+    width: auto;
+    height: 300px;
+    overflow: auto;
+}
+.log-board h2 {
+    text-align: center;
+}
+.log-board p::before {
+    margin-right: 5px;;
+}
+.log::before {
+    content: '>';
+}
+.command::before {
+    content: '$';
+}
+.controls {
+    margin-top: 8px;
+    display: flex;
+    gap: 5px;
+    justify-content: space-around;
+}
+.controls input {
+    flex: 0 0 100px;
+    background-color: white;
+    border: 3px solid lightblue;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.controls input:active:not(:disabled) {
+  border: 3px double lightblue;
+}
+
+.controls input:disabled {
+    border-color: gray;
+}
+
+.board > div {
+  display: flex;
+}
+.board p {
+  margin: 0;
+  flex: 1;
+  padding: 0 16px;
+}
+.board {
+  padding: 16px;
+}
+.board p:first-child {
+  border-right: 1px solid black;
+  text-align: right;
+}
+.scores {
+  border-bottom: 1px solid black;
+}
